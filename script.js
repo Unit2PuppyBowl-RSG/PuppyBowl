@@ -1,26 +1,54 @@
+// get elements
 const playerContainer = document.getElementById('all-players-container');
 const newPlayerFormContainer = document.getElementById('new-player-form');
+const singlePlayerContainer = document.getElementById('single-player-container');
+
 
 // Add your cohort name to the cohortName variable below, replacing the 'COHORT-NAME' placeholder
 const cohortName = '2302-ACC-ET-WEB-PT-A';
+
 // Use the APIURL variable for fetch requests
-const APIURL = `https://fsa-puppy-bowl.herokuapp.com/api/${cohortName}/`;
+const APIURL = `https://fsa-puppy-bowl.herokuapp.com/api/${cohortName}`;
+
+//console.log(APIURL);
+//console.log(cohortName);
 
 /**
  * It fetches all players from the API and returns them
  * @returns An array of objects.
  */
+
+// fetch all players
 const fetchAllPlayers = async () => {
     try {
-
+        const response = await fetch(`${APIURL}/players`);
+        const data = await response.json();
+        return data;
     } catch (err) {
         console.error('Uh oh, trouble fetching players!', err);
     }
 };
-
+// fetch single players
 const fetchSinglePlayer = async (playerId) => {
     try {
+        const response = await fetch(`${APIURL}/players/PLAYER-ID`);
+        const singlePlayer = await response.json();
 
+        const singlePlayerContainer = document.getElementById('single-player-container');
+        const singlePlayerElement = document.createElement('div');
+        singlePlayerElement.className = 'player-container';
+        singlePlayerElement.id = `player-${playerId}`;
+        singlePlayerElement.innerHTML = `
+        <img src=${imageUrl}>
+        <h2>Name: ${singlePlayer.name}</h2>
+        <p>Breed: ${singlePlayer.breed}</p>
+        <p>Status: ${singlePlayer.status}</p>
+        <p>Team: ${singlePlayer.teamId}</p>
+        <p>Created At: ${singlePlayer.createdAt}</p>
+        <p>Updatedn At: ${singlePlayer.updatedAt}</p>
+        `;
+        singlePlayerContainer.appendChild(singlePlayerElement);
+        return singlePlayerElement;
     } catch (err) {
         console.error(`Oh no, trouble fetching player #${playerId}!`, err);
     }
@@ -89,8 +117,9 @@ const renderNewPlayerForm = () => {
 const init = async () => {
     const players = await fetchAllPlayers();
     renderAllPlayers(players);
-
     renderNewPlayerForm();
+    fetchAllPlayers();
+    console.log(players);
 }
 
 init();
