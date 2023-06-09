@@ -1,5 +1,6 @@
 const playerContainerHTML = document.getElementById('player-container');
 const newPlayerFormContainer = document.getElementById('new-player-form');
+const playerDetailsElement = document.getElementById('player-detailcontainer');
 
 // Add your cohort name to the cohortName variable below, replacing the 'COHORT-NAME' placeholder
 const cohortName = '2302-ACC-ET-WEB-PT-A';
@@ -24,17 +25,17 @@ const fetchAllPlayers = async () => {
 
 fetchAllPlayers();
 
-const fetchSinglePlayer = async (playerId) => {
+const fetchSinglePlayer = async (id) => {
   try {
-    const response = await fetch(`${APIURL}/players/${playerId}`);
+    const response = await fetch(`${APIURL}/players/${id}`);
     const data = await response.json();
-    console.log(data);
+    console.log(data.data);
   } catch (err) {
-    console.error(`Oh no, trouble fetching player #${playerId}!`, err);
+    console.error(`Oh no, trouble fetching player #${id}!`, err);
   }
 };
 
-//fetchSinglePlayer();
+//fetchSinglePlayer(8805);
 
 const addNewPlayer = async (playerObj) => {
   try {
@@ -54,9 +55,9 @@ const addNewPlayer = async (playerObj) => {
 };
 //addNewPlayer();
 
-const removePlayer = async (playerId) => {
+const removePlayer = async (id) => {
   try {
-    const response = await fetch(`${APIURL}/players/${playerId}`, {
+    const response = await fetch(`${APIURL}/players/${id}`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
@@ -67,7 +68,7 @@ const removePlayer = async (playerId) => {
     console.log(result);
   } catch (err) {
     console.error(
-      `Whoops, trouble removing player #${playerId} from the roster!`,
+      `Whoops, trouble removing player #${id} from the roster!`,
       err
     );
   }
@@ -109,12 +110,13 @@ function createPlayerCards(playerList) {
         <h3>${player.name}</h3>
         <p>Breed: ${player.breed}</p>
         <p>ID: ${player.id}</p>
-        <p>Status: ${player.id}</p>
+        <p>Status: ${player.status}</p>
         <p>Team: ${player.teamId}</p>
+        <p>Cohort: ${player.cohortId}</p>
         <p>Created: ${player.createdAt}</p>
         <p>Updated: ${player.updatedAt}</p>
-        <button class="see-details" data-player-id="${player.id}">See details</button>
-        <button class="remove-roster" data-player-id="${player.id}">Remove from roster</button>
+        <button class="see-details" data-player-id="${player.id}">See Details</button>
+        <button class="remove-roster" data-player-id="${player.id}">Remove from Roster</button>
       </div>
     `;
 
@@ -126,41 +128,37 @@ function createPlayerCards(playerList) {
   playerContainerHTML.innerHTML = playerContainer;
 
   // Add event listeners to buttons
-  const seeDetailsButtons = document.querySelector('.see-details');
-  console.log(seeDetailsButtons);
+  const seeDetailsButtons = document.querySelectorAll('.see-details');
+  //console.log(seeDetailsButtons);
 
-  const removeRosterButtons = document.querySelector('.remove-roster');
+  const removeRosterButtons = document.querySelectorAll('.remove-roster');
 
   // Event listener for "See details" button
-  for (let i = 0; i < seeDetailsButtons.length; i++) {
-    const button = seeDetailsButtons[i];
-    console.log(button);
-    button.addEventListener('click', () => {
+  seeDetailsButtons.forEach((button) => {
+    button.addEventListener('click', (e) => {
       e.preventDefault();
-      //console.log(button.dataset);
-      alert("Hello");
-      //const playerId = button.dataset.id;
-      //fetchSinglePlayer(playerId);
+      console.log(button.dataset);
+      const id = button.dataset.playerId;
+      fetchSinglePlayer(id);
     });
-  }
+  });
 
   // Event listener for "Remove from roster" button
-  for (let i = 0; i < removeRosterButtons.length; i++) {
-    const button = removeRosterButtons[i];
-    button.addEventListener('click', () => {
-      const playerId = button.dataset.id;
-      console.log ("Hello");
-      removePlayer(playerId);
-    });
-  }
+ removeRosterButtons.forEach((button) => {
+  button.addEventListener('click', () => {
+    const id = button.dataset.playerId;
+    console.log('Hello');
+    removePlayer(id);
+  });
+});
 
   return playerContainer;
 }
 
-function fetchSinglePlayers(playerId) {
+function fetchSinglePlayers(id) {
   // Make a fetch request to API to get details for a single player
   // Replace this with your actual fetch code
-  fetch(`${APIURL}/players/${playerId}`)
+  fetch(`${APIURL}/players/${id}`)
     .then((response) => response.json())
     .then((player) => {
       // Process the fetched player data
@@ -171,11 +169,56 @@ function fetchSinglePlayers(playerId) {
     });
 }
 
+const seePlayerDetails = async (id) => {
+try {
+    const response = await fetch(`${APIURL}/players/${id}`);
+    const data = await response.json();
+    console.log(data.data.players);
+ // create new HTML element to display party details
+    const playerDetailsElement = document.createElement('div');
+    playerDetailsElement.classList.add('.player-detailcontainer');
+    playerDetailsElement.innerHTML = `
+            <div class="player-details">
+            <img width="300" src="${player.imageUrl}">
+            <h3>${player.name}</h3>
+            <p>Breed: ${player.breed}</p>
+            <p>ID: ${player.id}</p>
+            <p>Status: ${player.status}</p>
+            <p>Team: ${player.teamId}</p>
+            <p>Cohort: ${player.cohortId}</p>
+            <p>Created: ${player.createdAt}</p>
+            <p>Updated: ${player.updatedAt}</p>
+            <button class="close-button">Close</button>
+            </div>
+        `;
 
-function removePlayers(playerId) {
+        //empty the container
+    playerContainer.innerHTML = '';
+
+    //hide the party list container
+    playerListContainer.style.display = 'none'
+
+     //put the party details on the page. (in the container)
+    playerContainer.appendChild(playerDetailsElement);
+    //console.log(playerDetailsElement);
+
+    // add event listener to close button
+    const closeButton = playerDetailsElement.querySelector('.close-button');
+    closeButton.addEventListener('click', () => {
+      playerDetailsElement.remove();
+      playerListContainer.style.display = 'block';
+    });
+  } catch (error) {
+    console.error(error);
+  }  
+};
+
+
+
+function removePlayers(id) {
   // Make a fetch request to API to remove a player from the roster
   // Replace this with your actual fetch code
-  fetch(`${APIURL}/players/${playerId}`, { method: 'DELETE' })
+  fetch(`${APIURL}/players/${id}`, { method: 'DELETE' })
     .then((response) => {
       if (response.ok) {
         console.log('Player removed successfully');
@@ -211,7 +254,7 @@ const renderNewPlayerForm = () => {
         <label for="name">Name:</label>
         <input type="text" name="name" id="name">
         <label for="breed">Breed:</label>
-        <input type="text" name="position" id="position">
+        <input type="text" name="breed" id="breed">
         <label for="team">Team:</label>
         <input type="text" name="team" id="team">
         <label for="team">Status:</label>
@@ -226,9 +269,9 @@ const renderNewPlayerForm = () => {
     addButton.addEventListener('click', (event) => {
       event.preventDefault();
       const newPlayer = {
-        name: document.getElementById('name').value,
-        position: document.getElementById('position').value,
-        team: document.getElementById('team').value,
+        name: document.getElementById('name').name,
+        breed: document.getElementById('breed').breed,
+        team: document.getElementById('team').team,
       };
       addNewPlayer(newPlayer);
     });
@@ -238,9 +281,9 @@ const renderNewPlayerForm = () => {
 };
 
 const init = async () => {
-  
-  renderAllPlayers();
+  await renderAllPlayers();
   renderNewPlayerForm();
 };
+
 
 init();
