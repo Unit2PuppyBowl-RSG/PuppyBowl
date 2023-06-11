@@ -1,103 +1,167 @@
-*{
-    padding: 1 em;
-    margin: 1 em;
-    box-sizing: border-box;
-  }
-
-   body {
-    font-family: Arial, Helvetica, sans-serif;
-   }
-
-   h1 {
-    /* margin: 3.5rem; */
-    font-size: 1.5em;
-    font-family: Arial, Helvetica, sans-serif;
-    text-align: center;
-   }
-
-   h3 {
-    /* margin: 3.5rem; */
-    font-size: 2em;
-    font-family: Arial, Helvetica, sans-serif;
-
-    }
-
-   p {
-    /* margin: 3.5rem; */
-    font-size: 0.8em;
-    font-family: Arial, Helvetica, sans-serif;
-    line-height: 12px;
-    }
-
-   div#player-container {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-evenly;   
-    }
-
-   .player-card {  
-    flex-direction: row;
-    /* justify-content: center; */
-    /* align-items: flex-end; */
-    width: 31%;
-    height: auto;
-    background-color:azure;
-    margin: .5em;
-    padding: 0.5em;
-    border: solid 1px coral;
-    border-radius: 5px;
-    }
-  
-  .player-card img {
-    .img-fluid. max-width: 100%;
-    height: auto;
-    padding:0;
-    margin:0;
-    }
-    
-  #new-player-form {
-    display: flex;
-    padding: 10px;
-    margin: 10px;
-    width: 100%;
-    height: auto;
-    border: solid 1px coral;
-    }
-
-  form#new-player-form {
-    /* padding: 1em;
-    margin: 1em; */
-    background-color: azure;
-    width: 100%;
-    height: 50px;
-    border: solid 1px coral;
-    float: left;
-  }
-/* input {
-  width: 100%;
-  height: 30px;
-  line-height: inherit;
-  margin: inherit;
-
-}
-label {
-  font-size: .75em;
-  display: inline-block;
-  float: left;
-} */
-
-label,input{
-  font-size: .75em;
-  height: 36px;
-
+* {
+  padding: .5 em;
+  margin: .5 em;
+  box-sizing: border-box;
+  font-family: 'Outfit', sans-serif;
 }
 
-/* button.add-button {
-  font-size: 1em; 
-  background-color:aqua;
-  border: solid 1px; 
+h1 {
+  font-family: 'Rowdies', cursive;
+  font-size: 72px;
+  color: darkblue;
+  text-align: center;
+  text-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+  h1 {
+    font-size: 48px;
+  }
+}
+
+h2 {
+  font-family: 'Rowdies', cursive;
+  color: darkblue;
+}
+
+
+
+/* important this hides the details in the page*/
+.hidden {
+  display: none;
+}
+
+.new-player-form {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  background-color: dodgerblue;
+  color: #fff;
+  padding: 20px;
+  border-radius: 5px;
+  width: 50%;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.new-player-form label {
+  margin-bottom: 5px;
+  font-family: 'Rowdies', cursive;
+}
+
+.new-player-form input[type="text"] {
   width: 100%;
-  margin-left: 10px;
+  padding: 5px;
+  margin-bottom: 10px;
+}
 
-} */
+.new-player-form button {
+  margin-top: 10px;
+  background-color: #ccc;
+  color: #333;
+  padding: 5px 10px;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+}
 
+.new-player-form button[type="submit"]:hover,
+.new-player-form button[type="reset"]:hover {
+  background-color: #ddd;
+}
+
+#new-player-form-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 50vh;
+}
+
+
+/* this is for the player container cards*/
+
+div#player-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+  /* Distribute columns evenly */
+}
+
+.player-card {
+  flex-direction: row;
+  width: 30%;
+  /* Set width to 30% for 3 columns */
+  margin-bottom: 20px;
+  /* Add some margin at the bottom */
+  text-align: center;
+  border: 1px solid #000;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+
+}
+
+.player-card img {
+  width: 100%;
+  height: auto;
+}
+
+.player-details {
+  margin-top: 10px;
+  text-align: left;
+}
+
+.hidden {
+  display: none;
+}
+
+.button-container {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+}
+
+.button-container button {
+  margin-top: 10px;
+
+}
+
+/* Overlay */
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 9999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal {
+  background-color: #fff;
+  max-width: 500px;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  font-family: 'Outfit', sans-serif;
+}
+
+.modal h3 {
+  font-family: 'Rowdies', cursive;
+  margin-top: 0;
+  color: darkblue;
+}
+
+.modal p {
+  margin-bottom: 10px;
+  font-family: 'Outfit', sans-serif;
+}
+
+.modal button {
+  margin-top: 10px;
+  font-family: 'Outfit', sans-serif;
+}
